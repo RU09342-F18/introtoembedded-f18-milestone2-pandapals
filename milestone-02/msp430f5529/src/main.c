@@ -15,18 +15,18 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
-    setup_adc();
-
     setup_pwm();
 
-    setup_uart();
+    setup_adc();
 
-    setTemperatureGoal(33.2);
-    set_duty_cycle(255);
+    setup_uart();
+    __bis_SR_register(GIE);
+
+    //setTemperatureGoal(33.2);
+    //set_duty_cycle(255);
 
     while(1) {
-        start_sampling_conversion();
-        __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0, interrupts enabled
+        handleTemperatureControl((uint16_t) ADC12MEM0);
     }
 }
 
@@ -40,26 +40,20 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12_ISR (void)
 #endif
 {
     // 6: ADC12IFG0
-    if(__even_in_range(ADC12IV,34) == 6 || 1){
-        handleTemperatureControl((uint16_t) ADC12MEM0);
+    if(__even_in_range(ADC12IV,34) == 6){
+        //handleTemperatureControl((uint16_t) ADC12MEM0);
     }
 }
 
 uint8_t rxCounter = 0;
 Flint rxFlint = { .wholeNum = 0, .decimal = 0 };
 
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
-#pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1_ISR(void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
-#else
-#error Compiler not supported!
-#endif
+void __attribute__((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
 {
     // 012.123
+    send_bytes("HI\n", 3);
     uint8_t byteIn = UCA1RXBUF;
-   switch(rxCounter){
+    switch(rxCounter){
         case 0:
             rxFlint.wholeNum += ascii2Int(flipByte(byteIn)) * 100;
             break;

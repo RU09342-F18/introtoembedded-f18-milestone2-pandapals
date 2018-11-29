@@ -13,13 +13,13 @@ uint16_t adc_goal;
 
 float adc2Temperature(uint16_t adc) {
     if(adc >= 1807) {
-        return (adc - 3991.4888889) / -55.1466667;
+        return ((float)adc - 3991.4888889) / -55.1466667;
     }
     else if(adc >= 896) {
-        return (adc - 3099.3) / -34.22;
+        return ((float)adc - 3099.3) / -34.22;
     }
     else {
-        return (adc - 1778.357143) / -14.75714;
+        return ((float)adc - 1778.357143) / -14.75714;
     }
 }
 
@@ -66,7 +66,7 @@ void setTemperatureGoal(float temperature){
         adc_goal = -14.75714 * temperature + 1778.357143;
     }
     else {
-        adc_goal = 1; // out of range supported range
+        adc_goal = 0x3ff; // out of range supported range
     }
 
     for(uint8_t i = 0; i < 8; i++) {

@@ -8,12 +8,11 @@
 
 void setup_pwm() {
 
+    /*
     TA0CCTL0 = CCIE; //  CCR0 interrupt enabled
 
     // Add ID_1 to both timers (divide clk by 2) if brightness of 0 doesn't work
     // because there is not enough time between Timer A0 and Timer A1
-
-    TA0CTL = TASSEL_1 + MC_1 + TAIE /*+ ID_1 */; // Set the timer A to SMCLCK, Up mode
 
     TA0CCR0 = 256;
     // TA0CCR0 will set the overall RGB led period
@@ -24,7 +23,38 @@ void setup_pwm() {
     //        TA0CCR1 = brightness*2
 
     set_duty_cycle(0xaa);
+    */
 
+    //P1DIR |= BIT2;
+    //P1SEL |= BIT2;
+    //TA0CTL |= TASSEL_2;
+    //TA0CTL |= MC_1;
+    //TA0CCR0 = 256;
+    //TA0CCR1 = 0;
+    //TA0CCTL1 |= OUTMOD_7;
+
+
+    P1DIR |= BIT2;
+
+    // Set P1.2 for peripheral function
+    P1SEL |= BIT2;
+
+    // Select clock source to SMCLK
+    TA0CTL |= TASSEL_2;
+
+    // Set to up mode
+    TA0CTL |= MC_1;
+
+    // Set capture/compare 0 to 999
+    // 1kHz rate
+    TA0CCR0 = 9999;
+
+    // Set capture/compare 1 to 499
+    // 50% duty cycle
+    TA0CCR1 = 4999;
+
+    // Set CCR1 to Reset/Set
+    TA0CCTL1 |= OUTMOD_7;
 }
 
 void set_duty_cycle(uint8_t duty_cycle) {
@@ -32,7 +62,7 @@ void set_duty_cycle(uint8_t duty_cycle) {
 }
 
 void adjustDutyCycle(int16_t offest) {
-    int16_t ccr1 = TA0CCR1;
+    int16_t ccr1 = TA1CCR1;
     if(offest <= 0){
         TA0CCR0 = (uint8_t) MAX((ccr1 + offest), 0);
     }
