@@ -1,0 +1,17 @@
+\BOOKMARK [1][-]{section.1}{Design Overview}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Design Features}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Featured Applications}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Design Resources}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Block Diagram}{section.1}% 5
+\BOOKMARK [1][-]{section.2}{Key System Specifications}{}% 6
+\BOOKMARK [1][-]{section.3}{System Description}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Detailed Block Diagram}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{System Design Theory}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Thermistor Voltage Divider Setup}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Optimizing Temperature Precision}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Software Modified Bang-Bang}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.4}{Software Noise Reduction}{section.4}% 13
+\BOOKMARK [1][-]{section.5}{Getting Started/How to use the device}{}% 14
+\BOOKMARK [2][-]{subsection.5.1}{Wiring Diagram}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.2}{Communicating with the Device}{section.5}% 16
+\BOOKMARK [2][-]{subsection.5.3}{Bill of Materials}{section.5}% 17

@@ -1,0 +1,234 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+% DO NOT TOUCH THIS PART
+\documentclass{hitec}
+\newcommand{\HT}{\textsc{\raisebox{0.1em}{h}\raisebox{-0.1em}{i}%
+  \raisebox{0.1em}{t}\raisebox{-0.1em}{e}\raisebox{0.1em}{c} }}
+
+\usepackage[table,xcdraw]{xcolor}
+%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{gensymb}
+
+% Enter the title of either the lab or some other title you think fits
+\title{Milestone 2: Temperature Control System}
+
+% Place you team members here
+\author{Julia Konstantinos and John McAvoy}
+
+\company{Rowan University}
+\confidential{\textbf{-- ECE 09.321: Milestone 2 --}}
+
+
+% Place the packages you want to use here.
+\usepackage{hyperref} % This line is readily ommited of it makes trouble
+\usepackage{graphicx}
+\usepackage{float}
+\graphicspath{{./img/}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Design Overview}
+The goal of this lab was pick an MSP430 family processor and on a register
+level, design it to be an temperature controller that controls the temperature
+of a heat source by controlling the speed of a fan.
+
+\subsection{Design Features}
+The temperature controller is able to control a system to any temperature
+between 0 \degree C and 100 \degree C within 1 \degree C. Using, UART you can
+specify the desired temperature as well as monitor the temperature in real-time.
+
+\subsection{Featured Applications}
+This controller can be used for keeping circuit components from overheating.
+
+\subsection{Design Resources}
+The resources that were given to design this controller were: a F5529 launchpad,
+5V regulator, 12V DC fan, various resistors, wire, and a breadboard.
+
+\subsection{Block Diagram}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.9]{block_diagram}
+    \caption{Detailed Block Diagram}
+    \label{fig:block_diagram}
+\end{figure}
+
+\section{Key System Specifications}
+
+\section{System Description}
+The controller takes in a temperature value from UART to be set as the
+temperature goal, measures the temperature by measuring the voltage of a
+thermistor voltage divider using the F5529's ADC\_12, and then the fan's PWM is
+adjusted to create a steady-state at the desired temperature.
+
+\subsection{Detailed Block Diagram}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.9]{detailed_block_diagram}
+    \caption{Detailed Block Diagram}
+    \label{fig:detailed_block_diagram}
+\end{figure}
+
+\section{System Design Theory}
+
+\subsection{Thermistor Voltage Divider Setup}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{voltage_divider.png}
+    \caption{Voltage Divider}
+    \label{fig:voltage_divider}
+\end{figure}
+
+
+\subsection{Optimizing Temperature Precision}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.9]{voltage_optimizations}
+    \caption{Voltage Optimization}
+    \label{fig:voltage_optimizations}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{adc12_vs_temperature.png}
+    \caption{Voltage Optimization}
+    \label{fig:voltage_optimizations}
+\end{figure}
+
+\subsection{Software Modified Bang-Bang}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{adc12_vs_temperature_0_40.png}
+    \caption{Linearization: 0 - 40 \degree C}
+    \label{fig:adc12_vs_temperature_0_40}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{adc12_vs_temperature_0_45_65.png}
+    \caption{Linearization: 45 - 65 \degree C}\label{fig:adc12_vs_temperature_0_45_65}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{adc12_vs_temperature_70_100.png}
+\caption{Linearization: 70 - 100 \degree C}\label{fig:adc12_vs_temperature_70_100}
+\end{figure}
+
+\lstinputlisting[language=C,linerange={14-25,56-74}]{../milestone-02/msp430f5529/lib/temperature_control.c}
+
+\subsection{Software Noise Reduction}
+In order to prevent the temperature control logic from making drastic changes if a noisy signal is received in the ADC, a history of ADC values is recorded and the control logic takes the average ADC value instead of the instantaneous value.
+
+\lstinputlisting[language=C,linerange={11-12,25-33,45-55}]{../milestone-02/msp430f5529/lib/temperature_control.c}
+
+
+\section{Getting Started/How to use the device}
+
+\subsection{Wiring Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{milestone_2_bb_bb.pdf}
+    \caption{Circuit Wiring Diagram}
+    \label{fig:circuit_bb}
+\end{figure}
+
+\subsection{Communicating with the Device}
+The instruction bytes so set the desired temperature in degrees Celcius can be sent via the F5529 launchpad's USB port or by connecting P1.1 (RX) to a UART signal. The controller's output can also be viewed by connecting the launchpad's USB to a computer and running a serial terminal (such as cutecom) that is able to view the hexadecimal bytes transmitted by the controller, or by connecting P1.2 (TX) to a UART decoder.
+
+\subsection{Bill of Materials}
+\begin{itemize}
+\item 1 x MSP430F5529 Launchpad
+\item 1 x Breadboard
+\item 1 x 10k$\Omega$ Resistor
+\item 1 x 10k$\Omega$ thermistor
+\item 1 x 5V regulator
+\item 1 x 12 V DC fan
+\item 1 x NMOS
+\item Wire
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% ORIGINAL TEMPLATE
+% TOTALLY NOT NEEDED
+%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+
+\section{Introduction}
+In this part of the App Note, you will want to introduce the problem to the reader. This is normally the part where papers talk about ``Most everyone comes in contact with an audio amplifier circuit at least once a day. Due to the prevalence of these circuits, it is important...'' For example, in Lab 2 you looked at two main problems. The first was the impact of loading on an amplifier circuit by adding a speaker. The second was looking at volume control between a loaded and``unloaded" circuit. You \textbf{Do not} want to to talk about your results.
+
+\include{background.tex}
+
+\section{Background}
+This is where you can talk about the background theory of the devices you are using and any other applicable theory. We are not asking you to start out by saying ``In the beginning, there were only electrons'', but you also do not want to go over your audiences head. The best way I can recommend tuning your writing is  write your App note for someone that was in your shoes when you first were told that you had a lab. For the first few labs, you will probably have to talk about ``Our lord and savior Ohm and his one commandment'' (which much like the actual thing has many interpretations), but as the course goes on, you will \underline{hopefully} be able to begin to talk about more theory.
+\\
+\subsection{Subsections}
+Do not be afraid to use subsections if chunks of your background need to be explained or if you think it will better help the flow of the report. Just do not make every sentence its own subsection.
+\subsection{Equations}
+One of the reasons why I would like you all to start learning LaTeX is because writing equations within it are so simple. When you first start out, it may seem confusing to write out your equations in Code, but when you get used to it, you can make very good looking equations without requiring that much work on your end. \textbf{\underline{YOU SHOULD}} number your equations so that they can be referenced in your report. Instead of relying on saying ``In the equation below'', you should be writing ``As can be seen Equation \ref{eq:complex}''. This explicit listing basically eliminates all confusion the reader could have in following your work.
+
+\begin{equation}
+\int_0^\infty \cos(\alpha + j\omega) = z
+\label{eq:complex}
+\end{equation}
+
+
+\subsection{Figures}
+When it comes to figures, there are a few things that can really make or break a technical document. First off, all your circuit designs \textbf{SHOULD} be made on your own in TINA-TI or its equivalent whenever possible. For example, Fig. \ref{fig:MessyCircuit} is hand drawn and honestly is very hard to follow what is going on.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = .5]{pease.png}
+\caption{Messy Hand Drawn circuit that is hard to follow.}
+\label{fig:MessyCircuit}
+\end{figure}
+
+\noindent
+Much like the equations, figures need to have numbering so that you can reference them properly within the document. Cite your images whenever you add an image that was not created on your own.
+
+\subsubsection{\LaTeX \hspace{0ex} vs. Word/Docs}
+It is worth mentioning that one of the other awesome benefits with using LaTeX is that it will semi-automatically number your equations and figures for you. Word and Docs should be able to do this as well, but the process can become very tiring when you have many equations and figures within a document.
+
+\section{Evaluation and Results}
+This is where you will want to layout the steps you took to simulate, test, and evaluate the circuits in the lab. It is \textbf{\underline{SUPER IMPORTANT}} that you begin talking like engineers in these reports. This means two major things. First, you need to utilize \textbf{quantitative} language over \textbf{qualitative} language. Saying things like ``it worked, or it made sound'' really mean nothing. What is ``worked'' or what is your definition of success? Without laying this out, you basically have no grounds for your report. Utilize numbers and measurements to give your statements support rather than just putting out empty claims.
+\\
+\\
+\noindent
+The second thing that is required of an engineer is the explanation and defense of their decisions. Anytime that you hit a point where you must decide what values, parts, or even layouts to use, you \textbf{MUST} give an explanation as to why. For example, in Lab 2 when you calculated the current limiting resistor, you noticed that the specific resistance value was not available as a common resistor value. You were faced with a decision. Do you place multiple resistors in series/parallel to achieve the exact resistance (good luck with that)? Do you round your number up/down to the next value of resistance? And most importantly, \textbf{WHY DID YOU PICK THAT CHOICE?} Although it may be the answer at the time, you should never say ``We picked it 'cause it was close and stuff''. Give me measurements, uncertainties, arguments as to why one decision is better than the other. For example, I can tell you right now that putting multiple resistors in series would be the worst decision from an accuracy standpoint (look at the effect of cascading errors).
+
+\subsection{Measurement Uncertainty}
+One aspect of PECA and really any field of engineering is how we approximate the real world. For example, our resistors in the lab have a $\pm5\%$ tolerance. So even though the resistor may have a nominal values of 1000$\Omega$, this really can vary between 950$\Omega$-1050$\Omega$. What impact does this have on your circuit? If this is part of your amplifier circuitry, how does it impact the gain? What about with volume control, can that amount of resistance change be noticed?
+\\
+\\
+\noindent
+Now you may be thinking, ``Great, so I can just measure this stuff on the multimeter, write down the values to the 10th place and everything is good''. But in reality, those meters and scopes have uncertainties of their own. While they can be extremely precise, you need to take quite a few precautions before you can get to that accuracy. Also, all components that you deal with are impacted by the temperature they are running at.
+\\
+\\
+\noindent
+This is all meant to show you that your measurements really are meaningless unless you give the uncertainties and the conditions in which you measured the values. We are not asking you to measure everything with NIST level accuracy, but start making measurements on components and sources that you normally would trust. Measure resistors before using them in your circuits, measure your voltage sources (those displays lie), try to get as accurate as possible.
+
+\subsection{Results vs. Discussions}
+One of the most common issues I have seen in the past is the separation between the Results and the Discussion within a app note. Most students tend to mix these two portions of their reports into one big section. In an app note or a technical paper, you want to separate out your data (results) into one section and your discussions into another. This way, you can easily reference back to the results as well as it provides one place where a reader can see all of your data.
+
+\section{Discussion/Conclusions}
+Now you can explain what you found during your experimentation and attempt to explain why certain things happened. You should do this with as much explanation and rigor as you can. For example, in Lab 2, you attempted to drive the speaker without the Op Amp. What happened? More importantly, why did you not only get little to no volume, but also a very very small range of volume control? Cite some analysis you did in the previous sections. Basically, try to be inquisitive like the engineers you are learning to be. Instead of just rolling with the punches, question why the hell would we want to add a \$15 component to something that could easily be pennies in cost? What value does it add? What are each of the components doing?
+\\
+\\
+\noindent
+Make sure that you cover every point made in the lab procedure. Anytime you see a question asked, make sure you have the answer. It is up to you as the writer, however, to determine the best place to address that question. If it is an analysis question, it might be better suited for the Background section, where as measurements and results belong in the results section. Use your judgment and take 10 minutes (preferably a lot more) to look up example app notes and see how those writers compose their documents.
+\\
+\\
+\noindent
+Overall, keep this in mind when you are writing your reports. Imagine you are handing this App Note to a student next year that is in the same position you were right before starting the lab. They should be able to replicate exactly what you did as well as the results you obtained. The steps you lay out in the app note are the ones they will follow. If you were handed this app note, would you be bored out of your mind? Would it be hard to follow the flow of the experiment? Remember that the people grading these are people too and these reports can become very dry very quickly when you have to grade 30 of them. Don't make the document a joke, but give it some personality if you want.
+
+\fi
+
+
+\end{document}
+
