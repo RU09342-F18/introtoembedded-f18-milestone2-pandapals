@@ -15,15 +15,15 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
-    setup_pwm();
+    //setup_pwm();
 
     setup_adc();
 
     setup_uart();
     __bis_SR_register(GIE);
 
-    //setTemperatureGoal(33.2);
-    //set_duty_cycle(255);
+    setTemperatureGoal(33.2);
+    set_duty_cycle(128);
 
     while(1) {
         handleTemperatureControl((uint16_t) ADC12MEM0);
@@ -51,7 +51,6 @@ Flint rxFlint = { .wholeNum = 0, .decimal = 0 };
 void __attribute__((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
 {
     // 012.123
-    send_bytes("HI\n", 3);
     uint8_t byteIn = UCA1RXBUF;
     switch(rxCounter){
         case 0:
@@ -71,7 +70,7 @@ void __attribute__((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
             break;
         case 6:
             rxFlint.decimal += ascii2Int(flipByte(byteIn));
-            setTemperatureGoal(flint2Float(rxFlint));
+            setTemperatureGoal(65);
             rxFlint.wholeNum = 0;
             rxFlint.decimal = 0;
             rxCounter = 0;
